@@ -3,6 +3,7 @@
 {Emitter, CompositeDisposable} = require 'event-kit'
 Serializable = require 'serializable'
 Pane = require './pane'
+PaneElement = require './pane-element'
 ViewRegistry = require './view-registry'
 PaneContainerView = null
 
@@ -30,6 +31,10 @@ class PaneContainer extends Model
     @subscriptions = new CompositeDisposable
 
     @viewRegistry = params?.viewRegistry ? new ViewRegistry
+    @viewRegistry.addViewProvider
+      modelClass: Pane
+      viewClass: PaneElement
+
     @setRoot(params?.root ? new Pane)
     @destroyEmptyPanes() if params?.destroyEmptyPanes
 
