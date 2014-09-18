@@ -170,7 +170,7 @@ class PaneView extends View
   getContainer: -> @closest('.panes').view()
 
   trigger: (eventName) ->
-    atom.commands.dispatch @element, eventName
+    super unless atom.commands.dispatch @element, eventName
 
   jQueryTrigger: ->
     $.fn.trigger.apply(this, arguments)
