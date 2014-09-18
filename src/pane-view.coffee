@@ -164,3 +164,6 @@ class PaneView extends View
   splitDown: (items...) -> @model.getView(@model.splitDown({items})).__spacePenView
 
   getContainer: -> @closest('.panes').view()
+
+  trigger: (eventName) ->
+    atom.commands.dispatch @element, eventName
