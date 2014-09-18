@@ -42,7 +42,7 @@ class PaneView extends View
 
   afterAttach: ->
     @container ?= @closest('.panes').view()
-    @trigger 'pane:attached', [this]
+    @jQueryTrigger('pane:attached', [this])
 
   beforeRemove: ->
     @subscriptions.dispose()
@@ -83,9 +83,9 @@ class PaneView extends View
 
   onActiveStatusChanged: (active) =>
     if active
-      @trigger 'pane:became-active'
+      @jQueryTrigger 'pane:became-active'
     else
-      @trigger 'pane:became-inactive'
+      @jQueryTrigger 'pane:became-inactive'
 
   # Public: Returns the next pane, ordered by creation.
   getNextPane: ->
@@ -132,26 +132,26 @@ class PaneView extends View
     view.show() if @attached
     view.focus() if @hasFocus()
 
-    @trigger 'pane:active-item-changed', [item]
+    @jQueryTrigger 'pane:active-item-changed', [item]
 
   onItemAdded: ({item, index}) =>
-    @trigger 'pane:item-added', [item, index]
+    @jQueryTrigger 'pane:item-added', [item, index]
 
   onItemRemoved: ({item, index, destroyed}) =>
-    @trigger 'pane:item-removed', [item, index]
+    @jQueryTrigger 'pane:item-removed', [item, index]
 
   onItemMoved: ({item, newIndex}) =>
-    @trigger 'pane:item-moved', [item, newIndex]
+    @jQueryTrigger 'pane:item-moved', [item, newIndex]
 
   onBeforeItemDestroyed: (item) =>
     @unsubscribe(item) if typeof item.off is 'function'
-    @trigger 'pane:before-item-destroyed', [item]
+    @jQueryTrigger 'pane:before-item-destroyed', [item]
 
   activeItemTitleChanged: =>
-    @trigger 'pane:active-item-title-changed'
+    @jQueryTrigger 'pane:active-item-title-changed'
 
   activeItemModifiedChanged: =>
-    @trigger 'pane:active-item-modified-status-changed'
+    @jQueryTrigger 'pane:active-item-modified-status-changed'
 
   @::accessor 'activeView', -> @model.getView(@activeItem)?.__spacePenView
 
@@ -167,3 +167,9 @@ class PaneView extends View
 
   trigger: (eventName) ->
     atom.commands.dispatch @element, eventName
+
+  jQueryTrigger: ->
+    $.fn.trigger.apply(this, arguments)
+
+  focus: ->
+    @element.focus()
