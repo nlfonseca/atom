@@ -4,10 +4,10 @@
 Serializable = require 'serializable'
 Pane = require './pane'
 PaneElement = require './pane-element'
-PaneAxis = require './pane-axis'
+PaneContainerElement = require './pane-container-element'
 PaneAxisElement = require './pane-axis-element'
+PaneAxis = require './pane-axis'
 ViewRegistry = require './view-registry'
-PaneContainerView = null
 
 module.exports =
 class PaneContainer extends Model
@@ -33,12 +33,7 @@ class PaneContainer extends Model
     @subscriptions = new CompositeDisposable
 
     @viewRegistry = params?.viewRegistry ? new ViewRegistry
-    @viewRegistry.addViewProvider
-      modelClass: Pane
-      viewClass: PaneElement
-    @viewRegistry.addViewProvider
-      modelClass: PaneAxis
-      viewClass: PaneAxisElement
+    @registerViewProviders()
 
     @setRoot(params?.root ? new Pane)
     @destroyEmptyPanes() if params?.destroyEmptyPanes
@@ -56,8 +51,18 @@ class PaneContainer extends Model
     root: @root?.serialize()
     activePaneId: @activePane.id
 
-  getViewClass: ->
-    PaneContainerView ?= require './pane-container-view'
+  registerViewProviders: ->
+    @viewRegistry.addViewProvider
+      modelClass: PaneContainer
+      viewClass: PaneContainerElement
+
+    @viewRegistry.addViewProvider
+      modelClass: PaneAxis
+      viewClass: PaneAxisElement
+
+    @viewRegistry.addViewProvider
+      modelClass: Pane
+      viewClass: PaneElement
 
   getView: (object) ->
     @viewRegistry.getView(object)
