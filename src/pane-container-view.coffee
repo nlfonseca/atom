@@ -33,7 +33,7 @@ class PaneContainerView extends View
   onRootChanged: (root) =>
     focusedElement = document.activeElement if @hasFocus()
 
-    if oldRootView = @model.getView(@model.getRoot())
+    if oldRootView = @[0].firstChild
       oldRootView.remove()
 
     if root?
